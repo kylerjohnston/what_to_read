@@ -22,16 +22,32 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('csv', type=str,
                         help='Path to Goodreads library CSV export')
+    parser.add_argument('--include-read', action='store_true',
+                        help='Include books that have already been read in results')
     parser.add_argument('-n', type=int, default=10,
                         help='How many to sample')
     args = parser.parse_args()
+    include_read = args.include_read
     num_choices = args.n
     csv_path = args.csv
 
     with open(csv_path) as csv_body:
         reader = csv.DictReader(csv_body)
-        to_read = [row for row in reader if SHELF_FILTER in row['Bookshelves']]
-        selections = random.choices(to_read, k=num_choices)
+        to_read = []
+        read = []
+        for row in reader:
+            if SHELF_FILTER in row['Bookshelves']:
+                to_read.append(row)
+
+            if 'read' in row['Exclusive Shelf']:
+                read.append(row)
+
+        if include_read:
+            choices = to_read + read
+        else:
+            choices = to_read
+
+        selections = random.choices(choices, k=num_choices)
         print_selections(selections)
 
 if __name__ == '__main__':
