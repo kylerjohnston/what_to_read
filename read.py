@@ -48,8 +48,8 @@ def main():
         for row in reader:
             if SHELF_FILTER in row['Bookshelves']:
                 to_read.append(row)
-            if 'read' in row['Exclusive Shelf']:
-                read.append(row)
+                if 'read' in row['Exclusive Shelf']:
+                    read.append(row)
 
         choices = to_read
         if include_read:
