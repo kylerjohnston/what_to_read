@@ -29,7 +29,7 @@ def main():
                         help='How many to sample')
     args = parser.parse_args()
     include_read = args.include_read
-    century = args.century[0]
+    century = args.century
     num_choices = args.n
     csv_path = args.csv
 
