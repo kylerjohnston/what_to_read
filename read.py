@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Randomly select 10 books from a "Want to Read" Goodreads shelf """
+""" Randomly select books from a "Want to Read" Goodreads shelf """
 
 import argparse
 import csv
@@ -48,8 +48,8 @@ def main():
         for row in reader:
             if SHELF_FILTER in row['Bookshelves']:
                 to_read.append(row)
-                if 'read' in row['Exclusive Shelf']:
-                    read.append(row)
+            if row['Exclusive Shelf'] == 'read' and row['My Rating'] in ('4', '5'):
+                read.append(row)
 
         choices = to_read
         if include_read:
@@ -66,8 +66,18 @@ def main():
                     new_choices.append(row)
             choices = new_choices
 
-        selections = random.choices(choices, k=num_choices)
-        print_selections(selections)
+        random.shuffle(choices)
+        start = 0
+        end = num_choices
+        while True:
+            print_selections(choices[start:end])
+            result = input('Load more? [y/n]: ')
+            if result == 'y':
+                start += num_choices
+                end += num_choices
+            else:
+                return
+
 
 if __name__ == '__main__':
     main()
