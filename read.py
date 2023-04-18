@@ -23,7 +23,7 @@ def main():
     parser.add_argument('csv', type=str,
                         help='Path to Goodreads library CSV export')
     parser.add_argument('--include-read', action='store_true',
-                        help='Include books that have already been read in results')
+                        help='Include books that have already been read and rated 4 or 5 stars in results')
     parser.add_argument('--century', nargs=1, type=int, default=0)
     parser.add_argument('-n', type=int, default=10,
                         help='How many to sample')
