@@ -4,8 +4,11 @@
 import argparse
 import csv
 import random
+from datetime import datetime
 
 SHELF_FILTER = 'to-read'
+DATE_FORMAT = '%Y/%m/%d'
+TODAY = datetime.today()
 
 def print_selections(selections):
     """ Format and print selections """
@@ -25,6 +28,8 @@ def main():
     parser.add_argument('--include-read', action='store_true',
                         help='Include books that have already been read and rated 4 or 5 stars in results')
     parser.add_argument('--century', nargs=1, type=int, default=0)
+    parser.add_argument('--recent-adds', action='store_true',
+                        help='Prioritize titles added in the last 3 months')
     parser.add_argument('-n', type=int, default=10,
                         help='How many to sample')
     args = parser.parse_args()
@@ -32,6 +37,7 @@ def main():
     century = args.century
     num_choices = args.n
     csv_path = args.csv
+    recent_adds = args.recent_adds
 
     if 'century' != 0:
             start_year = (century - 1) * 100
@@ -48,6 +54,12 @@ def main():
         for row in reader:
             if SHELF_FILTER in row['Bookshelves']:
                 to_read.append(row)
+                # make things added in the last three months twice as likely
+                if recent_adds:
+                    date_added = datetime.strptime(row['Date Added'], DATE_FORMAT)
+                    delta = TODAY - date_added
+                    if delta.days < 90:
+                        to_read.append(row)
             if row['Exclusive Shelf'] == 'read' and row['My Rating'] in ('4', '5'):
                 read.append(row)
 
