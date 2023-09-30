@@ -62,7 +62,11 @@ def main():
                 # make things added in the last three months twice as likely
                 if recent_adds and delta.days < 90:
                     to_read.append(row)
+                    to_read.append(row)
+                    to_read.append(row)
                 if recent_pubs and delta.days < (365 * 2):
+                    to_read.append(row)
+                    to_read.append(row)
                     to_read.append(row)
             if row['Exclusive Shelf'] == 'read' and row['My Rating'] in ('4', '5'):
                 read.append(row)
